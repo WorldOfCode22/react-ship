@@ -1,0 +1,24 @@
+{
+  "name": "react-ship",
+  "version": "0.1.0",
+  "description": "Classic battleship gmae made with react",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WorldOfCode22/react-ship.git"
+  },
+  "author": "Sloan Gwaltney (Worldofcode22@gmail.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/WorldOfCode22/react-ship/issues"
+  },
+  "homepage": "https://github.com/WorldOfCode22/react-ship#readme",
+  "devDependencies": {
+    "tslint": "^5.10.0",
+    "tslint-config-standard": "^7.0.0",
+    "typescript": "^2.8.3"
+  }
+}
