@@ -10,3 +10,5 @@
    },
    name: "User",
  });
+
+ export {UserType};
