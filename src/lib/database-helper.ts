@@ -1,5 +1,5 @@
 import {createHmac} from "crypto";
-import {sign} from "jsonwebtoken";
+import {sign, verify} from "jsonwebtoken";
 import {IUserModel, User} from "../mongo/user";
 /**
  * This is a static class that has helper methods related to mongoose models
@@ -110,6 +110,17 @@ class DatabaseHelper {
     }
    }
 
+  public static getToken(token: string): Promise<string | object> {
+    return new Promise((resolve, reject) => {
+      verify(token, process.env.SIGN_HASH || "bjbkb", {}, (err, jwt) => {
+        if (jwt) {
+          resolve(jwt);
+        } else {
+          reject(err);
+        }
+      });
+    });
+  }
  }
 
 export {DatabaseHelper};
