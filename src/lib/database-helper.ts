@@ -82,7 +82,10 @@ class DatabaseHelper {
    */
   public static signToken(obj: any): Promise<string> {
     return new Promise((resolve, reject) => {
-      sign(obj, process.env.SIGN_HAHS || "vvfrevrev", {expiresIn: "1h"}, (err, jwt) => {
+      sign({
+        exp: Math.floor(Date.now() / 1000) + (60 * 60),
+        token: obj,
+      }, process.env.SIGN_HASH || "bjbkb", {}, (err, jwt) => {
         if (jwt) {
           resolve(jwt);
         } else {
@@ -100,7 +103,7 @@ class DatabaseHelper {
   public static async newToken(username: string, password: string) {
     try {
       const user = await DatabaseHelper.checkUsernameAndPassword(username, password);
-      const token = await DatabaseHelper.signToken(user);
+      const token = await DatabaseHelper.signToken(JSON.stringify(user));
       return token;
     } catch (e) {
       throw e;
