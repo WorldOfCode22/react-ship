@@ -1,4 +1,5 @@
 import {createHmac} from "crypto";
+import {sign} from "jsonwebtoken";
 import {IUserModel, User} from "../mongo/user";
 /**
  * This is a static class that has helper methods related to mongoose models
@@ -32,7 +33,7 @@ class DatabaseHelper {
         throw new Error("Username Taken");
       } else {
         const newUser = new User({
-          password: createHmac("sha256", process.env.HASH_KEY || "dfijfsodf").update(password).digest("hex"),
+          password: DatabaseHelper.hash(password),
           username,
         });
 
@@ -43,6 +44,69 @@ class DatabaseHelper {
        throw e;
      }
    }
+
+  /**
+   * hashes a string
+   * @param str string to hash
+   */
+  public static hash(str: string): string {
+    return createHmac("sha256", process.env.HASH_KEY || "dfijfsodf").update(str).digest("hex");
+  }
+  /**
+   * Checks username and password provided by user
+   * @param username username provided
+   * @param password password provided
+   * @returns user that has this username password match
+   */
+  public static async checkUsernameAndPassword(username: string, password: string): Promise<IUserModel> {
+    try {
+     const user = await DatabaseHelper.isUsernameUnique(username);
+     if (user) {
+      if (DatabaseHelper.hash(password) === user.password) {
+        return user;
+      } else {
+        throw new Error("Invalid Password");
+      }
+     } else {
+       throw new Error("Username Not Taken");
+     }
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  /**
+   * async sign a token
+   * @param obj obj to sign
+   * @returns promise to sign token
+   */
+  public static signToken(obj: any): Promise<string> {
+    return new Promise((resolve, reject) => {
+      sign(obj, process.env.SIGN_HAHS || "vvfrevrev", {expiresIn: "1h"}, (err, jwt) => {
+        if (jwt) {
+          resolve(jwt);
+        } else {
+          reject(err);
+        }
+      });
+    });
+  }
+
+  /**
+   * create a new user session token
+   * @param username username of user requesting session
+   * @param password password of user requesting session
+   */
+  public static async newToken(username: string, password: string) {
+    try {
+      const user = await DatabaseHelper.checkUsernameAndPassword(username, password);
+      const token = await DatabaseHelper.signToken(user);
+      return token;
+    } catch (e) {
+      throw e;
+    }
+   }
+
  }
 
 export {DatabaseHelper};
