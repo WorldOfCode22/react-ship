@@ -1,7 +1,9 @@
 import * as dotenv from "dotenv";
 import express = require("express");
 import expressGraphQL = require("express-graphql");
+import {createServer} from "http";
 import {connect} from "mongoose";
+import socketIo from "socket.io";
 import {Schema} from "../graphql/schema";
 const configLoad = dotenv.config();
 
@@ -10,8 +12,10 @@ const configLoad = dotenv.config();
  */
 class Application {
   private app = express();
+  private http = createServer(this.app);
   private port: number = typeof(process.env.PORT) === "string" ? parseInt(process.env.PORT, 10) : 80;
   private graphiql: boolean = process.env.NODE_ENV === "development" || "undefined" ? true : false;
+  private io: socketIo.Server = socketIo(this.http);
   private mongoURI: string = typeof(process.env.MONGO_URI) === "string" ? process.env.MONGO_URI : "";
   constructor() {
     this.expressSetup();
@@ -31,7 +35,7 @@ class Application {
         (err) => { console.warn("Database Connection Error!" + err) }
       );
 
-    this.app.listen(this.port, () => {
+    this.http.listen(this.port, () => {
       // tslint:disable-next-line
       console.log(`Express Application Running On Port ${this.port}`);
     });
