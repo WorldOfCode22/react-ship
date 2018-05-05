@@ -1,21 +1,26 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+// top level file for react
+// @flow
+import ApolloClient from "apollo-boost";
+import { ApolloProvider } from "react-apollo";
+import React from 'react'
+import Main from './components/main'
+import {isDev} from './env'
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+// setup Apollo
+const client = new ApolloClient({
+  uri: isDev === true ? 'http:localhost:80/graphql' : '/graphql' 
+});
+/**
+ * Top level of all react functions
+ */
+const App = () => {
+  return (
+    <ApolloProvider client={client}>
+      <div>
+        <Main />
       </div>
-    );
-  }
+    </ApolloProvider>
+  )
 }
 
-export default App;
+export default App
