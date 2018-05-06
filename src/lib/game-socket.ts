@@ -1,14 +1,17 @@
+import {Server} from "http";
 import socketIo from "socket.io";
 import { IEmittedMessage } from "./emitted-message-interface";
 import { IEmittedError } from "./errors/emitted-error-interface";
 import { CouldNotJoinRoom, SocketError } from "./errors/socket-error";
 import { IOHelper } from "./io-helper";
+import { SocketManager } from "./socket-manager";
 /**
  * class that handles the waiting and game rooms of the / namespace logic for socket.io sockets.
  */
-class GameSocket {
+class GameSocket extends SocketManager {
   private socket: socketIo.Socket;
-  constructor(socket: socketIo.Socket) {
+  constructor(server: Server , socket: socketIo.Socket) {
+    super(server);
     this.socket = socket;
   }
 
