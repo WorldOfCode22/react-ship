@@ -5,6 +5,8 @@ import {createServer} from "http";
 import {connect} from "mongoose";
 import socketIo from "socket.io";
 import {Schema} from "../graphql/schema";
+import { GameSocket } from "./game-socket";
+import { SocketManager } from "./socket-manager";
 const configLoad = dotenv.config();
 
 /**
@@ -15,7 +17,7 @@ class Application {
   private http = createServer(this.app);
   private port: number = typeof(process.env.PORT) === "string" ? parseInt(process.env.PORT, 10) : 80;
   private graphiql: boolean = process.env.NODE_ENV === "development" || "undefined" ? true : false;
-  private io: socketIo.Server = socketIo(this.http);
+  private io: SocketManager = new SocketManager(this.http);
   private mongoURI: string = typeof(process.env.MONGO_URI) === "string" ? process.env.MONGO_URI : "";
   constructor() {
     this.expressSetup();
