@@ -4,14 +4,14 @@ import { IEmittedMessage } from "./emitted-message-interface";
 import { IEmittedError } from "./errors/emitted-error-interface";
 import { CouldNotJoinRoom, SocketError } from "./errors/socket-error";
 import { IOHelper } from "./io-helper";
-import { SocketManager } from "./socket-manager";
+import SocketManager from "./socket-manager";
 /**
  * class that handles the waiting and game rooms of the / namespace logic for socket.io sockets.
  */
-class GameSocket extends SocketManager {
+
+export default class GameSocket {
   private socket: socketIo.Socket;
-  constructor(server: Server , socket: socketIo.Socket) {
-    super(server);
+  constructor(io: socketIo.Server, socket: socketIo.Socket) {
     this.socket = socket;
   }
 
@@ -43,5 +43,3 @@ class GameSocket extends SocketManager {
     }
   }
 }
-
-export {GameSocket};

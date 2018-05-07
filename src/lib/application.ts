@@ -5,8 +5,7 @@ import {createServer} from "http";
 import {connect} from "mongoose";
 import socketIo from "socket.io";
 import {Schema} from "../graphql/schema";
-import { GameSocket } from "./game-socket";
-import { SocketManager } from "./socket-manager";
+import SocketManager from "./socket-manager";
 const configLoad = dotenv.config();
 
 /**
@@ -44,4 +43,4 @@ class Application {
   }
 }
 
-export { Application };
+export default Application;

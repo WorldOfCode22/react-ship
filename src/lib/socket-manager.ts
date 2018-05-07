@@ -1,10 +1,9 @@
 import {Server} from "http";
 import socketIo from "socket.io";
-import {GameSocket} from "./game-socket";
-
-class SocketManager {
+import GameSocket from "./game-socket";
+export default class SocketManager {
   public io: socketIo.Server;
-  private server: Server;
+  public server: Server;
   private gameSocket?: GameSocket;
   constructor(server: Server) {
     this.server = server;
@@ -13,7 +12,7 @@ class SocketManager {
 
   private socketInit(): void {
     this.io.on("connection", (socket) => {
-      this.gameSocket = new GameSocket(this.server, socket);
+      this.gameSocket = new GameSocket(this.io, socket);
     });
   }
 
@@ -25,5 +24,3 @@ class SocketManager {
     }
   }
 }
-
-export {SocketManager};
