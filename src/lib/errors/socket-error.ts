@@ -5,25 +5,33 @@ import socketIo from "socket.io";
  * Base error that all socket errors extend
  */
 class SocketError extends Error {
-  constructor(message: string) {
+  public errGiven: any;
+  constructor(message: string, errGiven: any) {
     super(message);
     this.name = "Socket Error";
+    this.errGiven = errGiven;
   }
 }
 
 /**
  * Error that should occur when a socket is unable to join a room
  */
-class CouldNotJoinRoom extends SocketError {
+class CouldNotJoinRoomException extends SocketError {
   public socket: socketIo.Socket;
   public room: string;
-  public errGiven: any;
+  public name = this.constructor.name;
   constructor(socket: socketIo.Socket, room: string, errGiven: any) {
-    super("Socket could not join room");
+    super("Socket could not join room", errGiven);
     this.socket = socket;
     this.room = room;
-    this.errGiven = errGiven;
   }
 }
 
-export {SocketError, CouldNotJoinRoom};
+class CouldNotGetClientsException extends SocketError {
+  public name = this.constructor.name;
+  constructor(errGiven: any) {
+    super("Could not get client list", errGiven);
+  }
+}
+
+export {SocketError, CouldNotJoinRoomException, CouldNotGetClientsException};
